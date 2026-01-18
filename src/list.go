@@ -12,7 +12,7 @@ import (
 type Priority int
 
 const (
-	uncertain Priority = iota + 1
+	uncertain Priority = iota
 	low
 	medium
 	high
@@ -57,9 +57,8 @@ func (list *List) Add(desc string, priority Priority) {
 
 func (list *List) Delete(index int) {
 	list.count--
-
-	for i := 0; i <= list.count; i++ {
-		if i >= index-1 {
+	for i := 0; i < list.count; i++ {
+		if i >= index {
 			list.tasks[i] = list.tasks[i+1]
 		}
 	}
@@ -71,11 +70,7 @@ func (task *Task) Edit(desc string, priority Priority) {
 }
 
 func (task *Task) ChangeStatus() {
-	if task.iscompleted {
-		task.iscompleted = false
-	} else {
-		task.iscompleted = true
-	}
+	task.iscompleted = !task.iscompleted
 }
 
 func (list *List) Clear() {
@@ -163,9 +158,9 @@ func (list *List) WriteToFile() {
 
 func StatusToRune(status bool) rune {
 	if status {
-		return '🟣'
+		return '●'
 	} else {
-		return '🔵'
+		return '○'
 	}
 }
 

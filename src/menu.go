@@ -12,19 +12,20 @@ type Menu struct {
 }
 
 func (menu *Menu) Draw(list List) {
-	println()
-	println("(a)dd new task")
-	println("(d)elete task")
-	println("(e)dit task")
-	println("(c)hange status")
-	println("(C)lear list")
-	println("(q)uit")
-
 	FindLongestDesc(list)
 	list.Display()
+
+	println("a - Add new task")
+	println("d - Delete task")
+	println("e - Edit task")
+	println("c - Change status")
+	println("C - Clear list")
+	println("q - Quit")
+	println()
 }
 
 func (menu *Menu) HandleInput(list *List) {
+	println("────────────────────────────────")
 	print(">> ")
 	scanner := bufio.NewScanner(os.Stdin)
 	if ok := scanner.Scan(); !ok {
@@ -46,6 +47,7 @@ func (menu *Menu) HandleInput(list *List) {
 	case "C":
 		list.Clear()
 	}
+	println("────────────────────────────────")
 
 	list.WriteToFile()
 }
@@ -61,9 +63,9 @@ func (menu *Menu) AddTask(list *List) {
 	var desc = menu.scanner.Text()
 
 	println("\nPriorities:")
-	println("(l)ow")
-	println("(m)edium")
-	println("(h)igh")
+	println("l - Low")
+	println("m - Medium")
+	println("h - High")
 
 	print(">> ")
 	menu.scanner = bufio.NewScanner(os.Stdin)
@@ -110,7 +112,9 @@ func (menu *Menu) DeleteTask(list *List) {
 		return
 	}
 
-	if index <= 0 || index > list.count {
+	index--
+
+	if index < 0 || index > list.count {
 		println("\nIndex cannot be lower than 0 or higher than task count")
 		return
 	}
@@ -150,9 +154,9 @@ func (menu *Menu) EditTask(list *List) {
 	}
 
 	println("\nNew priority (enter for skip):")
-	println("(l)ow")
-	println("(m)edium")
-	println("(h)igh")
+	println("low")
+	println("medium")
+	println("high")
 
 	print(">> ")
 	menu.scanner = bufio.NewScanner(os.Stdin)
@@ -195,11 +199,13 @@ func (menu *Menu) ChangeTaskStatus(list *List) {
 		return
 	}
 
-	if index <= 0 || index > list.count {
+	index--
+
+	if index < 0 || index > list.count {
 		println("\nIndex cannot be lower than 0 or higher than task count")
 		return
 	}
 
-	list.tasks[index-1].ChangeStatus()
+	list.tasks[index].ChangeStatus()
 	list.WriteToFile()
 }
